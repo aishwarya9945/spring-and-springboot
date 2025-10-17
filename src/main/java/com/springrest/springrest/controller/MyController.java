@@ -1,6 +1,7 @@
 package com.springrest.springrest.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -52,12 +53,24 @@ public class MyController {
         return this.courseService.addCourse(course);
     }
 
-    //delete course
-    
-    @DeleteMapping("/courses/{courseId}")
-    public Courses deleteCourse(@PathVariable String courseId) {
-    return this.courseService.deleteCourse(Long.parseLong(courseId));
+//     //delete course in java8 style
+//     @DeleteMapping("/courses/{courseId}")
+//     public Courses deleteCourse(@PathVariable String courseId) {
+//     return this.courseService.deleteCourse(Long.parseLong(courseId));
+// }
+
+//delete course alternative
+@DeleteMapping("/courses/{courseId}")
+public ResponseEntity<HttpStatus> deleteCourseAlternative(@PathVariable String courseId) {
+    try {
+        this.courseService.deleteCourse(Long.parseLong(courseId));
+        return new ResponseEntity<>(HttpStatus.OK);
+    } catch (Exception e) {
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }
+
+
 
 
  //If our deleteCourse() in service returns void, update controller like this:
@@ -68,5 +81,5 @@ public class MyController {
 // }
 //This is cleaner and returns a 204 No Content response on successful deletion.
 
-}
 
+}
